@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import os
 
 # Inicializa o Pygame
 pygame.init()
@@ -8,7 +9,7 @@ pygame.init()
 # Dimensões da tela
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Invaders")
+pygame.display.set_caption("Guerras Estelares")
 
 # Cores
 WHITE = (255, 255, 255)
@@ -36,6 +37,18 @@ bullet_speed = -5
 bullet_active = False
 bullet_x, bullet_y = 0, 0
 
+# Caminho para a pasta de áudio
+audio_folder = "audio"
+
+# Carregar sons
+shoot_sound = pygame.mixer.Sound(os.path.join(audio_folder, "shoot.wav"))
+hit_sound = pygame.mixer.Sound(os.path.join(audio_folder, "hit.wav"))
+background_music = os.path.join(audio_folder, "background.mp3")
+
+# Reproduzir música de fundo (em loop)
+pygame.mixer.music.load(background_music)
+pygame.mixer.music.play(-1)  # -1 faz a música tocar indefinidamente
+
 # Loop principal do jogo
 running = True
 while running:
@@ -57,6 +70,7 @@ while running:
         bullet_active = True
         bullet_x = player_x + player_width // 2
         bullet_y = player_y
+        shoot_sound.play()  # Reproduz som do tiro
 
     # Movimento do projétil
     if bullet_active:
@@ -80,6 +94,7 @@ while running:
         bullet_active = False
         enemy_x = random.randint(0, WIDTH - enemy_width)
         enemy_y = 50
+        hit_sound.play()  # Reproduz som de acerto
 
     # Desenha o jogador
     pygame.draw.rect(screen, WHITE, (player_x, player_y, player_width, player_height))
