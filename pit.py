@@ -9,7 +9,7 @@ pygame.init()
 # Dimensões da tela
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Guerras Estelares")
+pygame.display.set_caption("Guerras Estelares")  # Título do jogo
 
 # Cores
 WHITE = (255, 255, 255)
@@ -34,8 +34,8 @@ enemy_speed = 3
 # Configuração do projétil
 bullet_width, bullet_height = 5, 10
 bullet_speed = -5
-bullet_active = False
-bullet_x, bullet_y = 0, 0
+bullets = []  # Lista para armazenar os projéteis
+shoot_cooldown = 0  # Tempo até o próximo disparo
 
 # Caminho para a pasta de áudio
 audio_folder = "audio"
@@ -60,24 +60,31 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    # Atualizar o cooldown
+    if shoot_cooldown > 0:
+        shoot_cooldown -= 1
+
     # Movimento do jogador
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player_x > 0:
         player_x -= player_speed
     if keys[pygame.K_RIGHT] and player_x < WIDTH - player_width:
         player_x += player_speed
-    if keys[pygame.K_SPACE] and not bullet_active:
-        bullet_active = True
-        bullet_x = player_x + player_width // 2
-        bullet_y = player_y
-        shoot_sound.play()  # Reproduz som do tiro
+    if keys[pygame.K_SPACE] and shoot_cooldown == 0:
+        # Adiciona um novo projétil à lista
+        bullets.append([player_x + player_width // 2, player_y])
+        shoot_sound.play()
+        shoot_cooldown = 10  # Cooldown entre disparos (menor valor = mais rápido)
 
-    # Movimento do projétil
-    if bullet_active:
-        bullet_y += bullet_speed
-        pygame.draw.rect(screen, RED, (bullet_x, bullet_y, bullet_width, bullet_height))
-        if bullet_y < 0:
-            bullet_active = False
+    # Movimento dos projéteis
+    for bullet in bullets[:]:
+        bullet[1] += bullet_speed
+        if bullet[1] < 0:
+            bullets.remove(bullet)  # Remove projétil fora da tela
+
+    # Desenha os projéteis
+    for bullet in bullets:
+        pygame.draw.rect(screen, RED, (bullet[0], bullet[1], bullet_width, bullet_height))
 
     # Movimento do inimigo
     enemy_x += enemy_speed
@@ -86,15 +93,15 @@ while running:
         enemy_y += 40
 
     # Detecção de colisão
-    if (
-        bullet_active
-        and enemy_x < bullet_x < enemy_x + enemy_width
-        and enemy_y < bullet_y < enemy_y + enemy_height
-    ):
-        bullet_active = False
-        enemy_x = random.randint(0, WIDTH - enemy_width)
-        enemy_y = 50
-        hit_sound.play()  # Reproduz som de acerto
+    for bullet in bullets[:]:
+        if (
+            enemy_x < bullet[0] < enemy_x + enemy_width
+            and enemy_y < bullet[1] < enemy_y + enemy_height
+        ):
+            bullets.remove(bullet)  # Remove o projétil que acertou
+            enemy_x = random.randint(0, WIDTH - enemy_width)
+            enemy_y = 50
+            hit_sound.play()  # Som de acerto
 
     # Desenha o jogador
     pygame.draw.rect(screen, WHITE, (player_x, player_y, player_width, player_height))
@@ -110,4 +117,3 @@ while running:
 
 pygame.quit()
 sys.exit()
-
