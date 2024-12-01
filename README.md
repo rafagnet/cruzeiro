@@ -103,7 +103,7 @@ Como Executar
     Certifique-se de que os arquivos de áudio estão na pasta audio no mesmo diretório do código.
     Execute o seguinte comando no terminal:
 
-    python game.py
+    python pit.py
 
 Aviso
 
