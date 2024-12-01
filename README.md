@@ -1,7 +1,7 @@
 Guerras Estelares 🎮
 Sobre o Projeto
 
-"Guerras Estelares" é um jogo simples desenvolvido em Python usando a biblioteca Pygame. Este projeto é um MVP (Produto Viável Mínimo) criado como parte de um projeto de PIT II. O objetivo é apresentar um jogo funcional que pode ser expandido com novas funcionalidades no futuro, receber feedback e reimplementar as sugestões com bugs consertados.
+"Guerras Estelares" é um jogo simples desenvolvido em Python usando a biblioteca Pygame. Este projeto é um MVP (Produto Viável Mínimo) criado como parte de um projeto de PIT II. O objetivo é apresentar um software funcional que pode ser expandido com novas funcionalidades no futuro, receber feedback e reimplementar as sugestões com bugs consertados.
 
 Funcionalidades Implementadas
 🟢 Jogador
@@ -42,7 +42,7 @@ Os arquivos de áudio estão localizados na pasta audio no mesmo diretório do c
 
     shoot.wav - Som de disparo.
     hit.wav - Som de impacto ao destruir inimigos.
-    background.wav - Música de fundo.
+    background.mp3 - Música de fundo.
 
 Lógica Principal
 Loop Principal
